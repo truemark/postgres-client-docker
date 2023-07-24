@@ -165,7 +165,7 @@ jobs:
             -f Dockerfile \
             -t truemark/postgres-client:beta-15 \
             .
-      - name: Copy 15 to ECR
+      - name: Copy beta-15 to ECR
         uses: truemark/skopeo-copy-action@v1
         with:
           src-image: "docker://truemark/postgres-client:beta-15"
