@@ -1,7 +1,7 @@
 definitions:
   script: &build |-
     - docker login --username $DOCKER_HUB_USER --password $DOCKER_HUB_PASS
-    - docker build --build-arg POSTGRES_VERSION=$VERSION -t $IMAGE:$VERSION-$BITBUCKET_BUILD_NUMBER
+    - docker build --build-arg POSTGRES_VERSION=$VERSION -t $IMAGE:$VERSION-$BITBUCKET_BUILD_NUMBER .
     - docker tag $IMAGE:$VERSION-$BITBUCKET_BUILD_NUMBER $IMAGE:$VERSION
     - docker push $IMAGE:$VERSION-$BITBUCKET_BUILD_NUMBER
     - docker push $IMAGE:$VERSION
