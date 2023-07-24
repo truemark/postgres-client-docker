@@ -11,4 +11,6 @@ RUN apt-get -qq update &&  apt-get -qq --no-install-recommends install curl gnup
   apt-get -qq update && apt-get -qq --no-install-recommends install postgresql-client-${POSTGRES_VERSION} && \
   apt-get -qq clean autoclean && apt-get -qq autoremove && rm -rf /var/lib/apt/lists/*
 
-ENTRYPOINT ["psql"]
+COPY entrypoint.sh /entrypoint.sh
+
+ENTRYPOINT ["/entrypoint.sh"]
