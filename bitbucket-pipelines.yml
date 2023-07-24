@@ -14,14 +14,14 @@ pipelines:
               name: Build PostgreSQL 10
               script:
                 - export VERSION=10 IMAGE="truemark/postgres-client"
-                - *build
+                *build
           - step:
               name: Build PostgreSQL 11
               script:
                 - export VERSION=11 IMAGE="truemark/postgres-client"
-                - *build
+                *build
           - step:
               name: Build PostgreSQL 12
               script:
                 - export VERSION=12 IMAGE="truemark/postgres-client"
-                - *build
+                *build
