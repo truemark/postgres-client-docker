@@ -12,16 +12,22 @@ pipelines:
       - parallel:
           - step:
               name: Build PostgreSQL 10
+              services:
+                - docker
               script:
                 - export VERSION=10 IMAGE="truemark/postgres-client"
                 - *build
           - step:
               name: Build PostgreSQL 11
+              services:
+                - docker
               script:
                 - export VERSION=11 IMAGE="truemark/postgres-client"
                 - *build
           - step:
               name: Build PostgreSQL 12
+              services:
+                - docker
               script:
                 - export VERSION=12 IMAGE="truemark/postgres-client"
                 - *build
