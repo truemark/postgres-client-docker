@@ -1,0 +1,177 @@
+name: beta
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - develop
+
+permissions:
+  id-token: write
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ssh-key: ${{ secrets.SSH_DEPLOY_KEY }}
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: "${{ secrets.AWS_ASSUME_ROLE }}"
+          aws-region: "us-east-1"
+          role-duration-seconds: 7200
+      - name: Login to ECR
+        id: ecr-login
+        uses: aws-actions/amazon-ecr-login@v1
+        with:
+          registry-type: public
+      - name: Setup Buildx Remote Docker
+        id: buildx
+        uses: truemark/aws-buildx-remote-docker-instance-action@v4
+        with:
+          security-group-id: "${{ vars.SECURITY_GROUP_ID }}"
+          subnet-id: "${{ vars.SUBNET_ID }}"
+          instance-profile: "${{ vars.INSTANCE_PROFILE }}"
+          region: "us-east-2"
+###############################################################################
+# PostgreSQL 10
+###############################################################################
+      - name: Build
+        run: |
+          docker buildx build \
+            --push \
+            --platform linux/arm64,linux/amd64 \
+            --build-arg POSTGRES_VERSION=10 \
+            -f Dockerfile \
+            -t truemark/postgres-client:beta-10 \
+            .
+      - name: Copy beta-10 to ECR
+        uses: truemark/skopeo-copy-action@v1
+        with:
+          src-image: "docker://truemark/postgres-client:beta-10"
+          dest-image: "docker://public.ecr.aws/truemark/postgres-client:beta-10"
+          src-username: "${{ secrets.DOCKER_HUB_USERNAME }}"
+          src-password: "${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}"
+          dest-username: "${{ steps.ecr-login.outputs.docker_username_public_ecr_aws }}"
+          dest-password: "${{ steps.ecr-login.outputs.docker_password_public_ecr_aws }}"
+          multi-arch: "all"
+###############################################################################
+# PostgreSQL 11
+###############################################################################
+      - name: Build
+        run: |
+          docker buildx build \
+            --push \
+            --platform linux/arm64,linux/amd64 \
+            --build-arg POSTGRES_VERSION=11 \
+            -f Dockerfile \
+            -t truemark/postgres-client:beta-11 \
+            .
+      - name: Copy beta-11 to ECR
+        uses: truemark/skopeo-copy-action@v1
+        with:
+          src-image: "docker://truemark/postgres-client:beta-11"
+          dest-image: "docker://public.ecr.aws/truemark/postgres-client:beta-11"
+          src-username: "${{ secrets.DOCKER_HUB_USERNAME }}"
+          src-password: "${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}"
+          dest-username: "${{ steps.ecr-login.outputs.docker_username_public_ecr_aws }}"
+          dest-password: "${{ steps.ecr-login.outputs.docker_password_public_ecr_aws }}"
+          multi-arch: "all"
+###############################################################################
+# PostgreSQL 12
+###############################################################################
+      - name: Build
+        run: |
+          docker buildx build \
+            --push \
+            --platform linux/arm64,linux/amd64 \
+            --build-arg POSTGRES_VERSION=12 \
+            -f Dockerfile \
+            -t truemark/postgres-client:beta-12 \
+            .
+      - name: Copy beta-12 to ECR
+        uses: truemark/skopeo-copy-action@v1
+        with:
+          src-image: "docker://truemark/postgres-client:beta-12"
+          dest-image: "docker://public.ecr.aws/truemark/postgres-client:beta-12"
+          src-username: "${{ secrets.DOCKER_HUB_USERNAME }}"
+          src-password: "${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}"
+          dest-username: "${{ steps.ecr-login.outputs.docker_username_public_ecr_aws }}"
+          dest-password: "${{ steps.ecr-login.outputs.docker_password_public_ecr_aws }}"
+          multi-arch: "all"
+###############################################################################
+# PostgreSQL 13
+###############################################################################
+      - name: Build
+        run: |
+          docker buildx build \
+            --push \
+            --platform linux/arm64,linux/amd64 \
+            --build-arg POSTGRES_VERSION=13 \
+            -f Dockerfile \
+            -t truemark/postgres-client:beta-13 \
+            .
+      - name: Copy beta-13 to ECR
+        uses: truemark/skopeo-copy-action@v1
+        with:
+          src-image: "docker://truemark/postgres-client:beta-13"
+          dest-image: "docker://public.ecr.aws/truemark/postgres-client:beta-13"
+          src-username: "${{ secrets.DOCKER_HUB_USERNAME }}"
+          src-password: "${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}"
+          dest-username: "${{ steps.ecr-login.outputs.docker_username_public_ecr_aws }}"
+          dest-password: "${{ steps.ecr-login.outputs.docker_password_public_ecr_aws }}"
+          multi-arch: "all"
+###############################################################################
+# PostgreSQL 14
+###############################################################################
+      - name: Build
+        run: |
+          docker buildx build \
+            --push \
+            --platform linux/arm64,linux/amd64 \
+            --build-arg POSTGRES_VERSION=14 \
+            -f Dockerfile \
+            -t truemark/postgres-client:beta-14 \
+            .
+      - name: Copy beta-14 to ECR
+        uses: truemark/skopeo-copy-action@v1
+        with:
+          src-image: "docker://truemark/postgres-client:beta-14"
+          dest-image: "docker://public.ecr.aws/truemark/postgres-client:beta-14"
+          src-username: "${{ secrets.DOCKER_HUB_USERNAME }}"
+          src-password: "${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}"
+          dest-username: "${{ steps.ecr-login.outputs.docker_username_public_ecr_aws }}"
+          dest-password: "${{ steps.ecr-login.outputs.docker_password_public_ecr_aws }}"
+          multi-arch: "all"
+###############################################################################
+# PostgreSQL 15
+###############################################################################
+      - name: Build
+        run: |
+          docker buildx build \
+            --push \
+            --platform linux/arm64,linux/amd64 \
+            --build-arg POSTGRES_VERSION=15 \
+            -f Dockerfile \
+            -t truemark/postgres-client:beta-15 \
+            .
+      - name: Copy 15 to ECR
+        uses: truemark/skopeo-copy-action@v1
+        with:
+          src-image: "docker://truemark/postgres-client:beta-15"
+          dest-image: "docker://public.ecr.aws/truemark/postgres-client:beta-15"
+          src-username: "${{ secrets.DOCKER_HUB_USERNAME }}"
+          src-password: "${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}"
+          dest-username: "${{ steps.ecr-login.outputs.docker_username_public_ecr_aws }}"
+          dest-password: "${{ steps.ecr-login.outputs.docker_password_public_ecr_aws }}"
+          multi-arch: "all"
